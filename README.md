@@ -34,7 +34,7 @@ Before te+sting anything make sure that you don't a battery connected or at leas
 ### Prerequisites
 
 Before using this repository, ensure you have Python installed on your machine. You can download Python from [here](https://www.python.org/downloads/).
-This repo was tested for Python >= 1.12
+This repo has been tested for Python >= 1.12 and there aren't many dependencies.
 
 ### Installation
 
@@ -93,11 +93,12 @@ You should enable higher Baud rates for the used MSP Port in the ports section w
 
 ### Running the python file
 __WARNING__: Before testing anything, at least screw the propellers off. Always test in a controlled enviroment and in a safe manner.
+
 To start controlling your Betaflight drone, follow the steps below:
 It is highly recommended that you confirm the telemetry before running TestCopter.py 
-Because TestCopter.py will actually control the motors
+Because TestCopter.py will actually control the motors.
 
-1. Modify the appropiate fields (serial_port and the baud rate) to suit your copter in Copter.py
+1. Modify the appropriate fields (serial_port and the baud rate) to suit your copter in Copter.py
 2. Connect your drone to your computer via USB or any supported communication interface.
 3. Run the script:
    ```bash
