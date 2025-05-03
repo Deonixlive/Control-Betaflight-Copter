@@ -130,8 +130,8 @@ To add customized control loops, either modify the Copter class directly or subc
 
 A few notes:
 - You want to issue default channel values or other values to the overwritten channels as specified in the MSP mask values. We found out during testing that switching to `MSP_OVERRIDE` while having no values set, let the copter panic into failsafe. This is due to no signals in the channel, despite the transition time being very small.
-- When subclassing Copter and defining your own 'control_iteration(self)' function, the automatically gets wrapped into a rate limited function and that instead gets executed. This is to enforce the control_freq set.
-- You wan't to ensure no packet get's lost, when setting high telemetry update rates. Consider lowering these, for more stable updates.
+- When subclassing Copter and defining your own `control_iteration(self)` function, it automatically gets wrapped into a rate limited function and that instead gets executed. This is to enforce the control_freq set.
+- You want to ensure that no packet gets lost, when setting high telemetry update rates. Consider lowering these, for more stable update rates.
 - Telemetry updates and the processing of commands happen in an Asyncio.event_loop. If you also program asynchronously, consider running these in their seperate threads.
 
 ---
