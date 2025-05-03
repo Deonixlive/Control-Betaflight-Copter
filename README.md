@@ -23,6 +23,7 @@ Everything is currently highly experimental and is still being tested. Always te
 
 Key features:
 - Highly performant asynchronous MSP implementation. (Tested for up to 200Hz telemetry update rate and command rate)
+- Implementing Betaflight's 'MSP_MULTIPLE_MSP' command for faster telemetry reporting
 - Compatibility with a range of Betaflight-equipped drones
 - Easy-to-use Python interface
 - Easy modifications via subclassing
