@@ -19,7 +19,7 @@ This repository provides an easy way to control FPV drones equipped with Betafli
 ## About the Project
 
 Drones using Betaflight firmware are widely popular in the FPV community for their flexibility and performance. This repository aims to provide a Python implementation to interact with these drones using MSP commands, enabling advanced control and customization.
-Everything is currently highly experimental and is still being tested. Always test in a safe manner and in a controlled environement. We take no responsibility for injuries or other damage.
+Everything is currently highly experimental and is still being tested. Always test in a safe manner and in a controlled environment. We take no responsibility for injuries or other damages.
 
 Key features:
 - Highly performant asynchronous MSP implementation. (Tested for up to 200Hz telemetry update rate and command rate)
