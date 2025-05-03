@@ -10,6 +10,7 @@ This repository provides an easy way to control FPV drones equipped with Betafli
 - [About the Project](#about-the-project)
 - [Getting Started](#getting-started)
 - [Usage](#usage)
+- [Customization](#customization)
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
@@ -118,6 +119,20 @@ because TestCopter.py will actually control the motors.
    ```
 4. Confirm the telemetry received is correct and working as it should.
 5. Now you can test with TestCopter.py
+
+---
+
+## Customization
+Many things, such as requested telemetry, can be added with modifying the Copter class in `Copter.py`.
+There are also various field to control the update frequencies and internal states.
+
+To add customized control loops, either modify the Copter class directly or subclass Copter as shown in `TestCopter.py`.
+
+A few notes:
+- You want to issue default channel values or other values to the overwritten channels as specified in the MSP mask values. We found out during testing that switching to `MSP_OVERRIDE` while having no values set, let the copter panic into failsafe. This is due to no signals in the channel, despite the transition time being very small.
+- When subclassing Copter and defining your own 'control_iteration(self)' function, the automatically gets wrapped into a rate limited function and that instead gets executed. This is to enforce the control_freq set.
+- You wan't to ensure no packet get's lost, when setting high telemetry update rates. Consider lowering these, for more stable updates.
+- Telemetry updates and the processing of commands happen in an Asyncio.event_loop. If you also program asynchronously, consider running these in their seperate threads.
 
 ---
 
