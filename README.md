@@ -56,12 +56,38 @@ This repo was tested for Python >= 1.12
 ## Usage
 ### Setting the Betaflight firmware up
 Before we can control the copter we need to do the following things:
-- Check the Betaflight FC version.
+- Check the Betaflight FC version (>= 4.5.2, 4.6 recommended)
 - Setting the `msp_override_channels_mask`.
 - Enabling the `MSP_OVERRIDE` flight mode.
 - [OPTIONAL] Recompile Betaflight for MSP command rates >= 100Hz.
 
 By default, Betaflight will only send MSP responses with a rate of 100Hz. If you want to request more data or send control signal, the package rate might slow down.
+#### Recompiling Betaflight and enabling higher package rates
+If you dont have Betaflight 4.5.2 or higher or want to enable higher package rate follow these instructions.
+To compile your own Betaflight firmware, follow the instructions at the [Betaflight website](https://betaflight.com/docs/category/building).
+Note that we won't need to recompile the Betaflight configurator.
+Before compiling a target with `make TARGETNAME` change the variable `serial_update_rate_hz` in the file 'betaflight/src/main/io/serial.c' to your desired rate.
+We recommend you start off with 150Hz but not to exceed 400Hz depending on the Flight Controller. 
+
+Save the changes and run `make TARGETNAME`. After this is done there should be a `.hex` file in the folder `obj`.
+Now start Betaflight Configurator or use the [web version](https://app.betaflight.com/). It is highly advised that you back up your configuration file before flashing.
+Flash the new firmware and optionally load your old configuration again.
+
+#### Enabling the MSP_OVERRIDE mode
+The value `msp_override_channels_mask` determines which rc channels can be overwritten when enabling `MSP_OVERRIDE`.
+The format is: `AUX16|...|AUX4|AUX3|AUX2|AUX1|YAW|THROTTLE|PITCH|Roll`. Setting it to 1 enables an overwrite.
+
+__WARNING:__ _On our firmware the YAW and THROTTLE channel was swapped. This has been corrected here, but you might wan't to revert that if you notice that it is wrong. You will also need to adjust the set_rc function in Copter.py_
+
+For our example we only need to enable the throttle channel which corresponds to `100 (Binary) = 8 (Dezimal)`. Notice the we can ignore the leftmost zeros.
+Now we can set and save the mask:
+```bash
+set msp_override_channels_mask = 8
+save
+get msp_override_channels_mask
+```
+In the modes section map `MSP_OVERRIDE` to an channel and save. Confirm that you can't control the set channels when in MSP_OVERRIDE in the remote tab.
+You should enable higher Baud rates for the used MSP Port in the ports section when using higher frequencies. We used 1'000'000.
 
 ### Running the python file
 To start controlling your Betaflight drone, follow the steps below:
