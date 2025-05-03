@@ -30,7 +30,7 @@ Key features:
 ---
 
 ## Getting Started
-Before te+sting anything make sure that you don't a battery connected or at least have taken the propellers off.
+Before testing anything make sure that you don't a battery connected or at least have taken the propellers off.
 ### Prerequisites
 
 Before using this repository, ensure you have Python installed on your machine. You can download Python from [here](https://www.python.org/downloads/).
