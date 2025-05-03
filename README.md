@@ -19,16 +19,17 @@ This repository provides an easy way to control FPV drones equipped with Betafli
 ## About the Project
 
 Drones using Betaflight firmware are widely popular in the FPV community for their flexibility and performance. This repository aims to provide a Python implementation to interact with these drones using MSP commands, enabling advanced control and customization.
+Everything is currently highly experimental and is still being tested. Always test in a safe manner and in a controlled environement. We take no responsibility for injuries or other damage.
 
 Key features:
-- Highly performant MSP implementation. (Tested for up to 200Hz telemetry update rate and command rate)
+- Highly performant asynchronous MSP implementation. (Tested for up to 200Hz telemetry update rate and command rate)
 - Compatibility with a range of Betaflight-equipped drones
 - Easy-to-use Python interface
-
+- Easy modifications via subclassing
 ---
 
 ## Getting Started
-Before tasting anything make sure that you don't a battery connected or at least have taken the propellers off.
+Before te+sting anything make sure that you don't a battery connected or at least have taken the propellers off.
 ### Prerequisites
 
 Before using this repository, ensure you have Python installed on your machine. You can download Python from [here](https://www.python.org/downloads/).
@@ -90,6 +91,7 @@ In the modes section map `MSP_OVERRIDE` to an channel and save. Confirm that you
 You should enable higher Baud rates for the used MSP Port in the ports section when using higher frequencies. We used 1'000'000.
 
 ### Running the python file
+__WARNING__: Before testing anything, at least screw the propellers off. Always test in a controlled enviroment and in a safe manner.
 To start controlling your Betaflight drone, follow the steps below:
 It is highly recommended that you confirm the telemetry before running TestCopter.py 
 Because TestCopter.py will actually control the motors
