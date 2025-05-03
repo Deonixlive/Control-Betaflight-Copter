@@ -107,16 +107,16 @@ You should enable higher Baud rates for the used MSP Port in the ports section w
 __WARNING__: Before testing anything, at least screw the propellers off. Always test in a controlled enviroment and in a safe manner.
 
 To start controlling your Betaflight drone, follow the steps below:
-It is highly recommended that you confirm the telemetry before running TestCopter.py 
-Because TestCopter.py will actually control the motors.
+It is highly recommended that you confirm the telemetry before running TestCopter.py,
+because TestCopter.py will actually control the motors.
 
-1. Modify the appropriate fields (serial_port and the baud rate) to suit your copter in Copter.py
+1. Modify the appropriate fields (`serial_port` and the `serial_bard_rate`) to suit your copter in Copter.py
 2. Connect your drone to your computer via USB or any supported communication interface.
 3. Run the script:
    ```bash
    python src/Copter.py
    ```
-4. Confirm the the telemetry received is correct and working as it should.
+4. Confirm the telemetry received is correct and working as it should.
 5. Now you can test with TestCopter.py
 
 ---
