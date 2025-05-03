@@ -56,9 +56,12 @@ This repo was tested for Python >= 1.12
 ## Usage
 ### Setting the Betaflight firmware up
 Before we can control the copter we need to do the following things:
-- Check the Betaflight FC version
-- Setting the `msp_override_channels_mask`
-- Enabling the 's'
+- Check the Betaflight FC version.
+- Setting the `msp_override_channels_mask`.
+- Enabling the `MSP_OVERRIDE` flight mode.
+- [OPTIONAL] Recompile Betaflight for MSP command rates >= 100Hz.
+
+By default, Betaflight will only send MSP responses with a rate of 100Hz. If you want to request more data or send control signal, the package rate might slow down.
 
 ### Running the python file
 To start controlling your Betaflight drone, follow the steps below:
