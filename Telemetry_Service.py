@@ -23,7 +23,7 @@ def empty_buffer_handler(func):
 
 
 # Telemetry thread for async telemetry updates
-# It doens't submit commands to MSP_Client directly.
+# It doesn't submit commands to MSP_Client directly.
 # Instead it executes an update function in update_functs
 # The processing still happens in the telemetry thread
 class Telemetry_Thread:
