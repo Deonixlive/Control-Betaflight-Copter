@@ -79,7 +79,8 @@ Flash the new firmware and optionally load your old configuration again.
 The value `msp_override_channels_mask` determines which rc channels can be overwritten when enabling `MSP_OVERRIDE`.
 The format is: `AUX16|...|AUX4|AUX3|AUX2|AUX1|YAW|THROTTLE|PITCH|Roll`. Setting it to 1 enables an overwrite.
 
-Here are some codes that might be useful:
+Note that we highly advise against overwriting AUX1, since the arming switch is usually there. 
+The following codes might be useful:
 ```bash
 | AUX4 	| AUX3 	| AUX2 	| YAW 	| THR 	| PTCH 	| ROLL 	| VAL 	|
 |------	|------	|------	|-----	|-----	|------	|------	|-----	|
