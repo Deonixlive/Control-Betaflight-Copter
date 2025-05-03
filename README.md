@@ -79,6 +79,17 @@ Flash the new firmware and optionally load your old configuration again.
 The value `msp_override_channels_mask` determines which rc channels can be overwritten when enabling `MSP_OVERRIDE`.
 The format is: `AUX16|...|AUX4|AUX3|AUX2|AUX1|YAW|THROTTLE|PITCH|Roll`. Setting it to 1 enables an overwrite.
 
+Here are some codes that might be useful:
+```bash
+| AUX4 	| AUX3 	| AUX2 	| YAW 	| THR 	| PTCH 	| ROLL 	| VAL 	|
+|------	|------	|------	|-----	|-----	|------	|------	|-----	|
+|      	|      	|      	|     	| X   	|      	|      	| 8   	|
+|      	|      	|      	| X   	| X   	| X    	| X    	| 15  	|
+|      	|      	| X    	| X   	| X   	| X    	| X    	| 47  	|
+|      	| X    	| X    	| X   	| X   	| X    	| X    	| 63  	|
+| X    	| X    	| X    	| X   	| X   	| X    	| X    	| 127 	|
+| X    	|      	| X    	| X   	| X   	| X    	| X    	| 95  	|
+```
 __WARNING:__ _On our firmware the YAW and THROTTLE channel was swapped. This has been corrected here, but you might wan't to revert that if you notice that it is wrong. You will also need to adjust the set_rc function in Copter.py_
 
 For our example we only need to enable the throttle channel which corresponds to `100 (Binary) = 8 (Dezimal)`. Notice the we can ignore the leftmost zeros.
