@@ -64,9 +64,9 @@ Before we can control the copter we need to do the following things:
 - Enabling the `MSP_OVERRIDE` flight mode.
 - [OPTIONAL] Recompile Betaflight for MSP command rates >= 100Hz.
 
-By default, Betaflight will only send MSP responses with a rate of 100Hz. If you want to request more data or send control signal, the package rate might slow down.
+By default, Betaflight will only send MSP responses with a rate of 100Hz. If you want to request more data or send control signals while doing so, the package rate might slow down.
 #### Recompiling Betaflight and enabling higher package rates
-If you dont have Betaflight 4.5.2 or higher or want to enable higher package rate follow these instructions.
+If you dont have Betaflight 4.5.2 or higher or want to enable higher package rate follow these instructions. Note that you do these at your own risk.
 To compile your own Betaflight firmware, follow the instructions at the [Betaflight website](https://betaflight.com/docs/category/building).
 Note that we won't need to recompile the Betaflight configurator.
 Before compiling a target with `make TARGETNAME` change the variable `serial_update_rate_hz` in the file 'betaflight/src/main/io/serial.c' to your desired rate.
@@ -83,14 +83,15 @@ The format is: `AUX16|...|AUX4|AUX3|AUX2|AUX1|YAW|THROTTLE|PITCH|Roll`. Setting 
 Note that we highly advise against overwriting AUX1, since the arming switch is usually there. 
 The following codes might be useful:
 ```bash
-| AUX4 	| AUX3 	| AUX2 	| YAW 	| THR 	| PTCH 	| ROLL 	| VAL 	|
-|------	|------	|------	|-----	|-----	|------	|------	|-----	|
-|      	|      	|      	|     	| X   	|      	|      	| 4   	|
-|      	|      	|      	| X   	| X   	| X    	| X    	| 15  	|
-|      	|      	| X    	| X   	| X   	| X    	| X    	| 47  	|
-|      	| X    	| X    	| X   	| X   	| X    	| X    	| 63  	|
-| X    	| X    	| X    	| X   	| X   	| X    	| X    	| 127 	|
-| X    	|      	| X    	| X   	| X   	| X    	| X    	| 95  	|
+| AUX4 	| AUX3 	| AUX2 	| AUX1 	| YAW 	| THR 	| ROLL 	| PTCH 	| VAL 	|
+|------	|------	|------	|------	|-----	|-----	|------	|------	|-----	|
+|      	|      	|      	|      	|     	| X   	|      	|      	| 4   	|
+|      	|      	|      	|      	| X   	| X   	| X    	| X    	| 15  	|
+|      	|      	| X    	|      	| X   	| X   	| X    	| X    	| 47  	|
+|      	| X    	| X    	|      	| X   	| X   	| X    	| X    	| 111 	|
+| X    	| X    	| X    	|      	| X   	| X   	| X    	| X    	| 239 	|
+| X    	|      	| X    	|      	| X   	| X   	| X    	| X    	| 175 	|
+| X    	|      	|      	|      	| X   	| X   	| X    	| X    	| 143 	|
 ```
 __WARNING:__ _On our firmware the YAW and THROTTLE channel was swapped. This has been corrected here, but you might want to revert that if you notice that it is wrong. You will also need to adjust the set_rc function in Copter.py_
 
