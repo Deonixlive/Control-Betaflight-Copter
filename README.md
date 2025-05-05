@@ -118,7 +118,7 @@ because TestCopter.py will actually control the motors.
    python src/Copter.py
    ```
 4. Confirm the telemetry received is correct and working as it should.
-5. Now you can test with TestCopter.py
+5. Now you can test with TestCopter.py. Depending on the tilt it should adjust the motors speed. If you encounter issues, check that the throttle in the telemetry get's adjusted and that you have the MSP_OVERRIDE mode on. If it still does not work, check wether the THROTTLE and YAW channels are swapped when communication via MSP. The latter was an issue that we found while testing. 
 
 ---
 
