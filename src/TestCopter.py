@@ -55,7 +55,7 @@ class TestCopter(Copter):
         
 
     def control_iteration(self):
-        self.update_copter_state()
+        # self.update_copter_state()
         # only control in 'AUTO' state
         if (self.copter_data['copter_state'] != 'AUTO'):
             # enforcing always sent aux commands so we dont get an rx loss

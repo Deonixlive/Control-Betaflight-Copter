@@ -11,7 +11,7 @@
 # Interface to Betaflight using the MSP protocol
 # see http://www.multiwii.com/wiki/index.php?title=Multiwii_Serial_Protocol for more details
 
-# not used but also helpful for further configuration (mainly speed)
+# Not used but also helpful for further configuration (mainly speed)
 # https://github.com/christianrauch/msp/blob/master/README.md
 
 import messages as msg
@@ -26,7 +26,7 @@ from time import perf_counter
 
 class MSP_Requests(object):
     """
-    Catalogue of MSP cmd's to request information.
+    Catalogue of MSP commands to request information.
     This doesn't include any ID to send data to the FC.
     """
     # Multiwii Standard ID's
@@ -88,9 +88,9 @@ class MSP_Requests(object):
     
 class Command:
     """
-    Only submit commands and requests in this format
-    helper class to prioritize commands and enables async execution
-    For controls set isAsync to False, otherwise an error occurs.
+    Only submit commands and requests in this format.
+    Helper class to prioritize commands and enable async execution.
+    For controls, set isAsync to False; otherwise, an error occurs.
     """
     def __init__(self, priority, cmd_id: int, data: bytearray = b'', isAsync: bool = True):
         self.priority = priority
@@ -106,9 +106,9 @@ class Command:
     
 class MSPClient(asyncio.Protocol):
     """
-    For further information see:
+    For further information, see:
     https://pyserial-asyncio.readthedocs.io/en/latest/
-    Use callback style asynchronous client. Should enable higher performance
+    Use callback-style asynchronous client. Should enable higher performance.
     """
     def __init__(self):
         self.transport = None
@@ -148,7 +148,7 @@ class MSPClient(asyncio.Protocol):
 
     def submit_request(self, command: Command):
         """
-        CAREFUL MSP_MULTIPLE_MSP commands get mapped to the same id.
+        CAREFUL: MSP_MULTIPLE_MSP commands get mapped to the same id.
         """
         if command.cmd_id not in self.cmd_map:
             self.cmd_map[command.cmd_id] = []
@@ -161,9 +161,9 @@ class MSPClient(asyncio.Protocol):
 
     def build_msp_command(self, data: List[Tuple]):
         """
-        helper function, for external use
-        builds the payload for an msp command.
-        This is for the data part of the msp command. [(INTEGERTYPE, VALUE), ...]
+        Helper function for external use.
+        Builds the payload for an MSP command.
+        This is for the data part of the MSP command: [(INTEGERTYPE, VALUE), ...]
         """
         payload = bytearray()
 
@@ -192,14 +192,14 @@ class MSPClient(asyncio.Protocol):
 
 
     # Callback: Gets called when data is being received.
-    # The incoming data might not be a whole MSP block
+    # The incoming data might not be a whole MSP block.
     def data_received(self, data):
         # print(f"📥 Received {len(data)} bytes: {data.hex()}")
         self.buffer.extend(data)
         self._parse_messages()
 
-    # we need this, because the client doesn't receive whole msp blocks
-    # especially when using higher frequencies
+    # We need this because the client doesn't receive whole MSP blocks,
+    # especially when using higher frequencies.
     def _parse_messages(self):
         while True:
             # Look for start of message
@@ -252,7 +252,7 @@ class MSPClient(asyncio.Protocol):
             self.pending_requests.discard(msg_id)
 
         else:
-            # NOTE: You might wan't to raise an e exception here
+            # NOTE: You might want to raise an exception here.
             # print(f"⚠️ Received message {msg_id}, but no pending commands found for it.")
             # print(f"{msg_id} {payload}")
             pass
@@ -262,8 +262,8 @@ class MSPClient(asyncio.Protocol):
         print("🔌 MSP connection lost")
         self.stop_cmd.set()
 
-    # TODO Fix this function
-    # For testing the speed use the copter class with telemetry logging instead
+    # TODO Fix this function.
+    # For testing the speed, use the copter class with telemetry logging instead.
     def test_speed(self, N=1000):
         id = 102
 

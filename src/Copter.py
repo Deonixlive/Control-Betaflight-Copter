@@ -8,9 +8,9 @@
 
 
 """
-WARNING: When switching to MSP_OVERRIDE mode you must have already set some values
-        in overwritten the rc channels.
-        Otherwise this might result in an RX_LOSS failsafe where the copter disables itself.
+WARNING: When switching to MSP_OVERRIDE mode, you must have already set some values
+        and overwritten the rc channels.
+        Otherwise, this might result in an RX_LOSS failsafe where the copter disables itself.
 
 This base class represents a copter.
 Basic commands are implemented here.
@@ -47,7 +47,14 @@ from contextlib import contextmanager
 # Operates autonomously
 # Not Intended to use directly, instead subclass Copter as shown in TestCopter.py
 class Copter:
-    def __init__(self, stop_cmd: threading.Event = None):
+    def __init__(self,
+                 config_path: str = None,
+                 stop_cmd: threading.Event = None
+                 ):
+        
+        # configuration file implemented via YAML
+
+
         self.stop_cmd = threading.Event() if stop_cmd is None else stop_cmd
 
         # TODO Add configurable via config file
@@ -66,18 +73,18 @@ class Copter:
         self.default_aux_values = {'aux'+str(i): 1500 for i in range(1, 5)}
 
         # Control settings
-        # NOTE: By default Betaflight limits the loop the 100Hz.
+        # NOTE: By default, Betaflight limits the loop to 100Hz.
         #       To change this, you have to recompile the firmware by
-        #       setting 'serial_update_rate_hz' in betaflight/src/main/io/serial.c to the appropiate value.
+        #       setting 'serial_update_rate_hz' in betaflight/src/main/io/serial.c to the appropriate value.
         #       If you notice the frequency dropping, the FC probably can't handle the value.
         # Updates per second (Hz)
         self.telemetry_freq = 10
 
         # Sets the frequency of the control loop (Copter.control_iteration) in Hz
-        self.control_freq = 10
+        self.control_freq = 1
 
         # functions to execute asynchronously when updating and processing copter data
-        # these get send to the telemetry thread
+        # these get sent to the telemetry thread
         self.update_functs = {
                               'update_msp_multiple': self.update_msp_multiple,
                               'report_telemetry': self.log_copter_data
@@ -111,11 +118,11 @@ class Copter:
                             'stop': None} 
         
         # Copter Logic
-        # we use decorates to rate limit the control loop
-        # Note the we limit the period insteads of calls
+        # we use decorators to rate limit the control loop
+        # Note that we limit the period instead of calls
         # this results in a more even firing rate.
         # 
-        # If we were instead to set calls=freq and period=1
+        # If we were instead to set calls=freq and period=1,
         # then we would execute the iteration in a burst and then wait.
         self.control_iteration_rate_limited = (sleep_and_retry) (\
                                                 (limits(calls=1, period=1/self.control_freq)) \
@@ -201,7 +208,7 @@ class Copter:
                 lambda: asyncio.create_task(self._init_subroutines_())
             )
 
-            # ✅ this blocking input remains in main thread
+            # this blocking input remains in main thread
             input('Press enter to stop process...\n')
             msg.display(msg.copter_stopping_threads)
             self.stop_cmd.set()
@@ -241,7 +248,7 @@ class Copter:
         settable = ['roll', 'pitch', 'yaw', 'throttle', 'aux1', 'aux2', 'aux3', 'aux4']
         payload = {key: self.get_or_set_copter_data(vals, key) for key in settable}
 
-        # CAREFUL for some reason the ordering differs then the one shown on multiwii
+        # CAREFUL: for some reason, the ordering differs from the one shown on multiwii
         # yaw and throttle are switched up
         # this has been corrected here
 
@@ -285,7 +292,7 @@ class Copter:
 
         (B) Length of first MSP Data Squence, (B) Length of 2nd MSP Data Sequence, ...
 
-        TODO implement a better way to control which data to request.
+        TODO: implement a better way to control which data to request.
         For instance, one might want to get rc data more often than GPS data.
         """
         
@@ -315,7 +322,7 @@ class Copter:
         try:
             unpacked = struct.unpack('<' + format, data)
         except Exception as e:
-            print(len(data))
+            print(len(data), format)
             print(e)
 
         update_dict  = {}
@@ -366,7 +373,7 @@ class Copter:
     async def update_rc_values(self):
         """
         WARNING: As of now, those are deprecated and requesting information should be done via MSP_MULTIPLE_MSP
-        for performance reasons.
+        for performance reasons. We leave this here so you have an example how such a custom function could look like.
 
         Use async to enable the use of await, such that we can implement priority
         if we request data from the FC we can create a Command object of the form: Command(PRIORITY, FUNCTION)
@@ -387,70 +394,6 @@ class Copter:
         self.copter_data['throttle'], self.copter_data['aux1'], self.copter_data['aux2'], \
         self.copter_data['aux3'], self.copter_data['aux4'] = rc_chs[:8]
 
-    # depr
-    async def update_altitude(self):
-        cmd = Command(1, MSP_Requests.MSP_ALTITUDE)
-        self.msp_client.submit_request(cmd)
-
-        data = await cmd.result
-        # This segments the Hex data into 2 byte segments and packs them into a list
-        alt_data = struct.unpack('<' + 'ih', data)
-        self.copter_data['altitude'] = alt_data[0]
-        self.copter_data['vario'] = alt_data[1]
-
-    # depr
-    async def update_attitude(self):
-        cmd = Command(1, self.msp.MSP_ATTITUDE)
-        self.msp.submit_request(cmd)
-        await cmd.done.wait()
-        if (cmd.result is None):
-            raise Exception("Command result is None")
-        msg_id, data = cmd.result
-        assert msg_id == 108, print(msg_id)
-        attitude_data = struct.unpack('<' + 'hhh', data)
-        self.copter_data['attitude']['angx'] = attitude_data[0]
-        self.copter_data['attitude']['angy'] = attitude_data[1]
-        self.copter_data['attitude']['heading'] = attitude_data[2]
-
-    # depr
-    async def update_gps(self):
-        cmd = Command(1, self.msp.MSP_RAW_GPS)
-        self.msp.submit_request(cmd)
-        await cmd.done.wait()
-        if (cmd.result is None):
-            raise Exception("Command result is None")
-            
-        msg_id, data = cmd.result
-        assert msg_id == 106
-
-        gps_data = struct.unpack('<' + 'BBIIHHH', data[:16])
-        self.copter_data['gps']['fix'] = gps_data[0]
-        self.copter_data['gps']['num_sats'] = gps_data[1]
-        self.copter_data['gps']['lat'] = gps_data[2] * 1e7
-        self.copter_data['gps']['lon'] = gps_data[3] * 1e7
-        self.copter_data['gps']['altitude'] = gps_data[4]
-        self.copter_data['gps']['ground_speed'] = gps_data[5]
-        self.copter_data['gps']['ground_course'] = gps_data[6]
-
-    # depr
-    async def update_analog_values(self):
-        cmd = Command(1, self.msp.MSP_ANALOG)
-        self.msp.submit_request(cmd)
-        await cmd.done.wait()
-        if (cmd.result is None):
-            print(cmd.result)
-            raise Exception("Command result is None")
-
-        msg_id, data = cmd.result
-        assert msg_id == 110, print(msg_id)
-        analog_data = struct.unpack('<' + 'BHHH', data[:7])
-
-        self.copter_data['battery'] = analog_data[0] / 10
-        self.copter_data['rssi'] = analog_data[1]
-        self.copter_data['signal'] = analog_data[2]
-        self.copter_data['battery_voltage'] = analog_data[3]
-
-
 if __name__ == '__main__':
     stop_cmd = threading.Event()
     # Create a copter instance
@@ -459,4 +402,3 @@ if __name__ == '__main__':
     copter.start()
 
 
-        
