@@ -95,7 +95,7 @@ The following codes might be useful:
 ```
 __WARNING:__ _On our firmware the YAW and THROTTLE channel was swapped. This has been corrected here, but you might want to revert that if you notice that it is wrong. You will also need to adjust the set_rc function in Copter.py_
 
-For our example we only need to enable the throttle channel which corresponds to `100 (Binary) = 4 (Dezimal)`. Notice the we can ignore the leftmost zeros.
+For our example we only need to enable the throttle channel which corresponds to `100 (Binary) = 4 (Decimal)`. Notice the we can ignore the leftmost zeros.
 Now we can set and save the mask:
 ```bash
 set msp_override_channels_mask = 4
