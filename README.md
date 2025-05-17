@@ -3,7 +3,7 @@
 ![Python](https://img.shields.io/badge/language-Python-blue)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-This repository provides an easy way to control FPV drones equipped with Betaflight via a highly performant MSP (Multiwii Serial Protocol) implementation. It allows for more accurate and faster control of FPV Drones while enabling the compute power and intelligence of an companion computer.
+This repository provides an easy way to control FPV drones equipped with Betaflight via a highly performant MSP (Multiwii Serial Protocol) implementation. It allows for precise and fast control of FPV Drones while enabling the compute power and intelligence of an companion computer.
 
 ## Table of Contents
 
