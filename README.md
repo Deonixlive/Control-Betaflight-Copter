@@ -106,7 +106,7 @@ In the modes section map `MSP_OVERRIDE` to an channel and save. Confirm that you
 You should enable higher Baud rates for the used MSP Port in the ports section when using higher frequencies. We used 1'000'000.
 
 ### Running the python file
-__WARNING__: Before testing anything, at least screw the propellers off. Always test in a controlled enviroment and in a safe manner.
+__WARNING__: Before testing anything, at least screw the propellers off. Always test in a controlled environment and in a safe manner.
 
 To start controlling your Betaflight drone, follow the steps below:
 It is highly recommended that you confirm the telemetry before running TestCopter.py,
