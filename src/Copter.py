@@ -60,7 +60,7 @@ class Copter:
         # TODO Add configurable via config file
         # Copter settings
         # Name used for logging (and maybe elsewhere)
-        self.name = 'DEFAULT-COPTER'
+        self.name = 'TEST-1COPTER'
         # Serial port to Betaflight Flight Controller
         self.serial_port = '/dev/ttyACM0'
         # self.serial_baud_rate = 115200
@@ -78,10 +78,10 @@ class Copter:
         #       setting 'serial_update_rate_hz' in betaflight/src/main/io/serial.c to the appropriate value.
         #       If you notice the frequency dropping, the FC probably can't handle the value.
         # Updates per second (Hz)
-        self.telemetry_freq = 10
+        self.telemetry_freq = 100
 
         # Sets the frequency of the control loop (Copter.control_iteration) in Hz
-        self.control_freq = 1
+        self.control_freq = 50
 
         # functions to execute asynchronously when updating and processing copter data
         # these get sent to the telemetry thread
@@ -103,7 +103,13 @@ class Copter:
                             'vario': None,             # vertical speed cm/s
                             'attitude': {'angx': None, # roll in deg (raw value in 1 / 10 deg)
                                          'angy': None, # same here for pitch
-                                         'heading': None}, # [-180, 180] in deg (raw value in 1 / 10 deg)    
+                                         'heading': None}, # [-180, 180] in deg (raw value in 1 / 10 deg)
+                            'imu': {'acc_x': None,     # acceleration in g (9.81 m/s^2) depends on the IMU used
+                                    'acc_y': None,
+                                    'acc_z': None,
+                                    'gyro_x': None,          # angular velocity in deg/s also depends on the IMU used
+                                    'gyro_y': None,
+                                    'gyro_z': None},
                             'gps': {'fix': None,           # 0 -> no fix, 1 -> fix
                                     'num_sats': None,
                                     'lat': None,           # in deg, (raw value in 1 / 10_000_000 deg)
@@ -134,7 +140,7 @@ class Copter:
 
         # DEBUG VARS
         self.counter = 0
-        self.counter_interval = 5
+        self.counter_interval = 50
         self.start_time = perf_counter()
         self.end_time = perf_counter()
 
@@ -301,6 +307,7 @@ class Copter:
                         MSP_Requests.MSP_RC,
                         MSP_Requests.MSP_ALTITUDE,
                         MSP_Requests.MSP_ATTITUDE,
+                        MSP_Requests.MSP_RAW_IMU,
                         MSP_Requests.MSP_RAW_GPS,
                         MSP_Requests.MSP_ANALOG,
                         ]
@@ -348,6 +355,20 @@ class Copter:
             self.copter_data['attitude']['angx'], \
             self.copter_data['attitude']['angy'], \
             self.copter_data['attitude']['heading'] = update_dict[MSP_Requests.MSP_ATTITUDE]
+
+        if MSP_Requests.MSP_RAW_IMU in self.msp_reqs:
+            # IMU data
+            gyro_conv_factor = (2000.0 / 32768.0) #ICM_42688P uses +-16g/+-2000deg over 16 bits 
+            acc_conv_factor = (16.0 / 32768.0)
+
+            self.copter_data['imu'] = {
+                'acc_x': update_dict[MSP_Requests.MSP_RAW_IMU][0] * acc_conv_factor,
+                'acc_y': update_dict[MSP_Requests.MSP_RAW_IMU][1] * acc_conv_factor,
+                'acc_z': update_dict[MSP_Requests.MSP_RAW_IMU][2] * acc_conv_factor,
+                'gyro_x': update_dict[MSP_Requests.MSP_RAW_IMU][3] * gyro_conv_factor,
+                'gyro_y': update_dict[MSP_Requests.MSP_RAW_IMU][4] * gyro_conv_factor,
+                'gyro_z': update_dict[MSP_Requests.MSP_RAW_IMU][5] * gyro_conv_factor
+            }
 
         if MSP_Requests.MSP_RAW_GPS in self.msp_reqs:
             # GPS data
