@@ -30,7 +30,7 @@ import struct
 
 # DEBUG
 from time import perf_counter
-
+import pprint
 # Custom scripts
 from MSP_Service import MSPClient, Command, MSP_Requests
 from Telemetry_Service import Telemetry_Thread
@@ -60,7 +60,7 @@ class Copter:
         # TODO Add configurable via config file
         # Copter settings
         # Name used for logging (and maybe elsewhere)
-        self.name = 'TEST-1COPTER'
+        self.name = 'TEST-COPTER'
         # Serial port to Betaflight Flight Controller
         self.serial_port = '/dev/ttyACM0'
         # self.serial_baud_rate = 115200
@@ -88,12 +88,6 @@ class Copter:
         self.update_functs = {
                               'update_msp_multiple': self.update_msp_multiple,
                               'report_telemetry': self.log_copter_data
-                            #   those below are deprecated. Instead modify update_msp_multiple
-                            #   'update_rc_values': self.update_rc_values, 
-                            #   'update_altitide': self.update_altitude,
-                            #   'update_attitude': self.update_attitude,
-                            #   'update_gps': self.update_gps,
-                            #   'update_analog_values': self.update_analog_values,
                               }
         
         # access this data and other internal states here
@@ -140,7 +134,7 @@ class Copter:
 
         # DEBUG VARS
         self.counter = 0
-        self.counter_interval = 50
+        self.counter_interval = 100
         self.start_time = perf_counter()
         self.end_time = perf_counter()
 
